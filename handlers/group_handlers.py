@@ -3,6 +3,8 @@ from config import logger, GROUP_ID
 from services.sticker_service import sticker_service
 from utils.telegram_utils import send_group_message, send_group_sticker, send_group_audio, send_group_video
 import src.agent, src.tts
+from src.tts import tts_engine
+import uuid
 import os
 
 
@@ -21,9 +23,10 @@ def register_group_handlers(client):
             elif message_type == "sticker":
                 await send_group_sticker(event, agent_response)
             elif message_type == "audio":
-                audio_path = src.tts.synthesize_speech(text=agent_response)
-                await send_group_audio(event, audio_path)
-                os.remove(audio_path)
+                res = tts_engine.synthesize_speech(text=agent_response)
+                audio = res.get('audio', None)
+                if audio:
+                    await send_group_audio(event, audio)
             elif message_type == "video":
                 await send_group_video(event, agent_response)
             elif message_type == "none":

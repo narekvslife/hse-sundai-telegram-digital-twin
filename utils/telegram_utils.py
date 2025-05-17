@@ -16,11 +16,8 @@ async def send_group_sticker(event, sticker_id: str):
     else:
         await event.reply("Стикер не найден в коллекции")
 
-async def send_group_audio(event, audio_path: str):
-    if os.path.exists(audio_path):
-        await event.client.send_file(event.chat_id, audio_path, voice_note=True)
-    else:
-        await event.reply("Ошибка генерации аудио")
+async def send_group_audio(event, audio: bytes):
+    await event.client.send_file(event.chat_id, audio, voice_note=True)
 
 async def send_group_video(event, video_path: str):
     if os.path.exists(video_path):

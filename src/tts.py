@@ -24,17 +24,15 @@ class TTSEngine:
             logger.error(f"Ошибка при инициализации TTS модели: {e}")
             raise
 
-    def synthesize_speech(self, text: str, query_id: str) -> dict:
+    def synthesize_speech(self, text: str) -> dict:
         """
         Синтез речи из текста
         
         Args:
             text: Текст для синтеза
-            query_id: id запроса
             
         Returns:
             Аудио данные в формате WAV
-            id запроса
             
         """
         if not self.model:
@@ -48,23 +46,25 @@ class TTSEngine:
                 split_sentences=True
             )
             return {
-                    'audio': wav,
-                    'query_id': query_id
+                    'audio': wav
                    }
+        
         except Exception as e:
             logger.error(f"Ошибка при синтезе речи: {e}")
             raise
+
+
+tts_engine = TTSEngine()
 
 
 if __name__ == "__main__":
     engine = TTSEngine()
 
     sample_text = "Когда мне было шесть лет, я увидел однажды удивительную картинку."     # текст запроса
-    query_id = str(uuid.uuid4())                                                          # id запроса
 
-    res = engine.synthesize_speech(sample_text, query_id)
+    res = engine.synthesize_speech(sample_text)
     
-    audio, query_id = res['audio'], res['query_id']
+    audio = res['audio']
     
     Audio(audio, rate=24000)
 
