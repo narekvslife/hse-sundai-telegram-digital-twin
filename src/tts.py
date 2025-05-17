@@ -35,12 +35,17 @@ class TTSEngine:
             self.initialize()
 
         try:
+            # wav = self.model.tts(
+            #     text=text,
+            #     speaker="Viktor Menelaos",
+            #     language="ru",
+            #     split_sentences=True
+            # )
             wav = self.model.tts(
                 text=text,
-                speaker="Viktor Menelaos",
+                speaker_wav=["src/voice/zvonok-osoboy-gosudarstvennoy-vajnosti.wav"],
                 language="ru",
-                split_sentences=True
-            )
+                )
 
             wav_np = np.array(wav)
 
