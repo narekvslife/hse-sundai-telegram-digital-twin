@@ -9,7 +9,7 @@ load_dotenv()
 api_id = os.getenv('TELEGRAM_API_ID')
 api_hash = os.getenv('TELEGRAM_API_HASH')
 
-async def get_group_ids():
+async def get_GROUP_IDs():
     async with TelegramClient('session_name', api_id, api_hash) as client:
         # Get all dialogs (conversations)
         dialogs = await client.get_dialogs()
@@ -22,4 +22,4 @@ async def get_group_ids():
 
 # Run the async function
 import asyncio
-asyncio.run(get_group_ids())
+asyncio.run(get_GROUP_IDs())
