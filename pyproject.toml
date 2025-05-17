@@ -1,9 +1,9 @@
 [project]
-name = "hse-sundai-telegram-digital-twin"
+name = "telegram-digital-twin"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">3.9,<3.12"
 dependencies = [
     "python-dotenv>=1.1.0",
     "telethon>=1.40.0",
