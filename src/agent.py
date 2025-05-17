@@ -136,7 +136,8 @@ def build_graph(FULL_HISTORY, MY_CORPUS, max_my_messages):
     return g.compile()
 
 
-def process_message(graph, message: str):
+def process_message(message: str):
+    graph = build_graph(full_hist, my_corpus, MAX_MY_MESSAGES)
     incoming = HumanMessage(content=message)
     final    = graph.invoke({"messages": [incoming]})
     print(final)
