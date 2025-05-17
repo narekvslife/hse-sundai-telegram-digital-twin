@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 API_ID = os.getenv('TELEGRAM_API_ID')
 API_HASH = os.getenv('TELEGRAM_API_HASH')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-GROUP_ID = os.getenv('TELEGRAM_GROUP_ID')
+GROUP_ID = int(os.getenv('TELEGRAM_GROUP_ID'))
 
 # Пути
 STICKERS_FILE = Path("stickers.json")
