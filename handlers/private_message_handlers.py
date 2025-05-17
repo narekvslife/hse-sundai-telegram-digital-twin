@@ -35,8 +35,6 @@ async def private_message_handler(event):
             audio_path = src.tts.synthesize_speech(text=agent_response)
             await send_private_audio(event, audio_path)
             os.remove(audio_path)
-        elif message_type == "video":
-            await send_private_video(event, agent_response)
         elif message_type == "none":
             pass
         else:
