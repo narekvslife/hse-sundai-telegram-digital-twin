@@ -2,6 +2,11 @@ import os
 from telethon import TelegramClient, events
 from dotenv import load_dotenv
 
+
+from src import agent
+from src import telegram_bot
+from src import tts
+
 load_dotenv()
 
 # Your API credentials from https://my.telegram.org/
@@ -23,19 +28,25 @@ client = TelegramClient('session_name', api_id, api_hash)
 @client.on(events.NewMessage(chats=group_id))
 async def message_handler(event):
     # Access the message content
+    # TODO: Handle media messages
     message_text = event.message.text
     
-    # Print the message
-    print(f"New message: {message_text}")
+    # Process the message
+    message_type, agent_response = agent.process_message(message=message_text)
     
     # You can access other attributes like:
-    sender = await event.get_sender()
-    print(f"Sender: {sender.username}")
+    if message_type == "text":
+        telegram_bot.send_message(message=agent_response)
+    elif message_type == "sticker":
+        telegram_bot.send_sticker(sticker=agent_response)
+    elif message_type == "audio":
+        message_audio = tts.synthesize_speech(text=agent_response)
+        telegram_bot.send_audio(audio=message_audio)
+    elif message_type == "none":
+        pass
+    else:
+        print(f"Unknown message type: {message_type}")
     
-    # Access media, if any
-    if event.message.media:
-        print("This message contains media")
-
 # Start the client
 async def main():
     await client.start()
