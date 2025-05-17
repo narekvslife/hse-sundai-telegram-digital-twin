@@ -9,7 +9,7 @@ import os
 
 
 def register_group_handlers(client):
-    @client.on(events.NewMessage(chats=GROUP_ID))
+    @client.on(events.NewMessage(chats=GROUP_ID, incoming=True))
     async def group_message_handler(event):
         try:
             message_text = event.message.text

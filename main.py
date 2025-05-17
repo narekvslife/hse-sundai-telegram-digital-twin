@@ -4,11 +4,12 @@ from handlers import (
     command_handlers,
     sticker_handlers,
     message_handlers,
-    group_handlers
+    group_handlers,
+    private_message_handlers
 )
 from services.sticker_service import sticker_service
 
-client = TelegramClient('bot_session', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
+client = TelegramClient('session_name', API_ID, API_HASH)
 
 
 def register_handlers():
@@ -26,6 +27,7 @@ def register_handlers():
     )
 
     group_handlers.register_group_handlers(client)
+    private_message_handlers.register_private_handlers(client)
 
 
 async def main():
