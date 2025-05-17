@@ -14,7 +14,7 @@ async def group_message_handler(event):
         message_text = event.message.text
 
         # message_type, agent_rsd message in group {GROUP_ID}: {message_text}")
-        message_type = "text"
+        message_type = "audio"
         agent_response = message_text
         if message_type == "text":
             await send_group_message(event, agent_response)
