@@ -4,7 +4,10 @@ from pathlib import Path
 import logging
 from IPython.display import Audio
 import uuid
-
+import io
+from pydub import AudioSegment
+from scipy.io.wavfile import write
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -26,18 +29,11 @@ class TTSEngine:
 
     def synthesize_speech(self, text: str) -> dict:
         """
-        Синтез речи из текста
-        
-        Args:
-            text: Текст для синтеза
-            
-        Returns:
-            Аудио данные в формате WAV
-            
+        Синтез речи и преобразование в OGG
         """
         if not self.model:
             self.initialize()
-            
+
         try:
             wav = self.model.tts(
                 text=text,
@@ -45,10 +41,22 @@ class TTSEngine:
                 language="ru",
                 split_sentences=True
             )
+
+            wav_np = np.array(wav)
+
+            wav_bytes_io = io.BytesIO()
+            write(wav_bytes_io, rate=24000, data=(wav_np * 32767).astype(np.int16))
+            wav_bytes_io.seek(0)
+
+            audio = AudioSegment.from_wav(wav_bytes_io)
+            ogg_io = io.BytesIO()
+            audio.export(ogg_io, format="ogg", codec="libopus")
+            ogg_io.seek(0)
+
             return {
-                    'audio': wav
-                   }
-        
+                'audio': ogg_io.read(),
+            }
+
         except Exception as e:
             logger.error(f"Ошибка при синтезе речи: {e}")
             raise
@@ -57,14 +65,19 @@ class TTSEngine:
 tts_engine = TTSEngine()
 
 
-if __name__ == "__main__":
-    engine = TTSEngine()
+# if __name__ == "__main__":
+#     engine = TTSEngine()
 
-    sample_text = "Когда мне было шесть лет, я увидел однажды удивительную картинку."     # текст запроса
+#     sample_text = "Однажды Николай Хадзакос нашел тун тун цахура"   # текст запроса
 
-    res = engine.synthesize_speech(sample_text)
+#     res = engine.synthesize_speech(sample_text)
     
-    audio = res['audio']
+#     audio = res['audio']
     
-    Audio(audio, rate=24000)
+#     # Save file to directory
+#     file_name = f"output/{uuid.uuid4()}.ogg"
+#     with open(file_name, 'wb') as f:
+#         f.write(audio)
+    
+#     Audio(audio, rate=24000)
 
