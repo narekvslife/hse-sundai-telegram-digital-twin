@@ -2,6 +2,9 @@ from TTS.api import TTS
 import torch
 from pathlib import Path
 import logging
+from IPython.display import Audio
+import uuid
+
 
 logger = logging.getLogger(__name__)
 
@@ -21,31 +24,47 @@ class TTSEngine:
             logger.error(f"Ошибка при инициализации TTS модели: {e}")
             raise
 
-    def synthesize_speech(self, text: str, output_filename: str = "output.wav") -> bytes:
+    def synthesize_speech(self, text: str, query_id: str) -> dict:
         """
         Синтез речи из текста
         
         Args:
             text: Текст для синтеза
-            output_filename: Имя выходного файла
+            query_id: id запроса
             
         Returns:
-            bytes: Аудио данные в формате WAV
+            Аудио данные в формате WAV
+            id запроса
+            
         """
         if not self.model:
             self.initialize()
             
         try:
-            output_path = self.output_dir / output_filename
             wav = self.model.tts(
                 text=text,
-                file_path=str(output_path),
                 speaker="Viktor Menelaos",
                 language="ru",
                 split_sentences=True
             )
-            logger.info(f"Речь успешно синтезирована в файл {output_path}")
-            return wav
+            return {
+                    'audio': wav,
+                    'query_id': query_id
+                   }
         except Exception as e:
             logger.error(f"Ошибка при синтезе речи: {e}")
             raise
+
+
+if __name__ == "__main__":
+    engine = TTSEngine()
+
+    sample_text = "Когда мне было шесть лет, я увидел однажды удивительную картинку."     # текст запроса
+    query_id = str(uuid.uuid4())                                                          # id запроса
+
+    res = engine.synthesize_speech(sample_text, query_id)
+    
+    audio, query_id = res['audio'], res['query_id']
+    
+    Audio(audio, rate=24000)
+
