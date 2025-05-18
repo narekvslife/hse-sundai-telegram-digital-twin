@@ -14,7 +14,7 @@ from langgraph.types import Command
 from typing_extensions import TypedDict
 
 MODEL_NAME = os.getenv("MODEL_NAME", "qwen2.5:32b-instruct")
-llm_selector = ChatOllama(model=MODEL_NAME, temperature=0.3)
+llm_selector = ChatOllama(model=MODEL_NAME, temperature=0.6)
 llm_persona = ChatOllama(model=MODEL_NAME, temperature=0)
 
 class ChatState(TypedDict, total=False):
